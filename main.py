@@ -1,5 +1,6 @@
 import string
 import random
+import pyfiglet
 from colorama import init, Fore, Style
 
 def generate_password(length, groups, charset):
@@ -8,9 +9,13 @@ def generate_password(length, groups, charset):
     random.shuffle(password_chars)
     return ''.join(password_chars)
 
+def print_banner():
+    ascii_banner = pyfiglet.figlet_format("Password Generator")
+    print(Fore.CYAN + ascii_banner + "v1.01 by @emptyenemy\n" + Style.RESET_ALL)
+
 def main():
     init(autoreset=True)
-    print(Fore.CYAN + "\nГенератор паролей v1.00\n")
+    print_banner()
     while True:
         try:
             length = int(input(Fore.YELLOW + "Введите количество символов для пароля: " + Style.RESET_ALL))
@@ -20,7 +25,7 @@ def main():
             break
         except ValueError:
             print(Fore.RED + "\nПожалуйста, введите корректное число.\n" + Style.RESET_ALL)
-    print(Fore.CYAN + "\nВыберите пресет для пароля:")
+    print(Fore.CYAN + "\nВыберите пресет для пароля:\n")
     print("1: Только строчные латинские буквы")
     print("2: Строчные и заглавные латинские буквы")
     print("3: Строчные, заглавные латинские буквы и цифры")
