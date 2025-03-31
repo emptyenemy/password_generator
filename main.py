@@ -30,7 +30,7 @@ def main():
     print("1: Только строчные латинские буквы")
     print("2: Строчные и заглавные латинские буквы")
     print("3: Строчные, заглавные латинские буквы и цифры")
-    print("4: Строчные, заглавные буквы, цифры и спецсимволы\n" + Style.RESET_ALL)
+    print("4: Строчные, заглавные латинские буквы, цифры и спецсимволы\n" + Style.RESET_ALL)
     while True:
         preset = input(Fore.YELLOW + "Введите номер пресета: " + Style.RESET_ALL).strip()
         if preset == "1":
@@ -56,6 +56,7 @@ def main():
         return
     password = generate_password(length, groups, charset)
     print(Fore.GREEN + "\nСгенерированный пароль: " + Fore.WHITE + password + "\n" + Style.RESET_ALL)
+    input(Fore.YELLOW + "Нажмите Enter, чтобы выйти...\n" + Style.RESET_ALL)
 
 if __name__ == '__main__':
     main()
