@@ -10,7 +10,7 @@ def generate_password(length, groups, charset):
 
 def main():
     init(autoreset=True)
-    print(Fore.CYAN + "\nГенератор паролей\n")
+    print(Fore.CYAN + "\nГенератор паролей v1.00\n")
     while True:
         try:
             length = int(input(Fore.YELLOW + "Введите количество символов для пароля: " + Style.RESET_ALL))
