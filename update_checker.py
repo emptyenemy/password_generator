@@ -1,7 +1,8 @@
 import requests
 import subprocess
 import sys
-import pyfiglet
+import os
+import zipfile
 from colorama import init, Fore, Style
 
 def get_local_version():
@@ -33,17 +34,36 @@ def is_update_available(local, remote):
         print(Fore.RED + "Ошибка при сравнении версий" + Style.RESET_ALL)
         sys.exit(1)
 
-def update_repo():
-    try:
-        subprocess.run(["git", "pull"], check=True)
-        print(Fore.GREEN + "Обновление завершено успешно!" + Style.RESET_ALL)
-    except subprocess.CalledProcessError:
-        print(Fore.RED + "Ошибка обновления репозитория." + Style.RESET_ALL)
-        sys.exit(1)
+def download_latest_release():
+    url = "https://github.com/emptyenemy/password_generator/archive/refs/tags/v1.0.6.zip"  # Поменяйте на актуальный URL для последнего релиза
+    print(Fore.YELLOW + "Скачиваем последнюю версию проекта..." + Style.RESET_ALL)
+    response = requests.get(url)
+    with open('password_generator_latest.zip', 'wb') as f:
+        f.write(response.content)
+    print(Fore.GREEN + "Загрузка завершена!" + Style.RESET_ALL)
+
+def extract_zip():
+    print(Fore.YELLOW + "Распаковываем архив..." + Style.RESET_ALL)
+    with zipfile.ZipFile('password_generator_latest.zip', 'r') as zip_ref:
+        zip_ref.extractall('password_generator_latest')
+    print(Fore.GREEN + "Распаковка завершена!" + Style.RESET_ALL)
+
+def replace_old_files():
+    print(Fore.YELLOW + "Заменяем старые файлы новыми..." + Style.RESET_ALL)
+    for root, dirs, files in os.walk('password_generator_latest/password_generator-1.0.6'):  # Замените на актуальный путь после распаковки
+        for file in files:
+            old_file_path = os.path.join(root, file)
+            new_file_path = os.path.join(os.getcwd(), file)
+
+            if os.path.exists(new_file_path):
+                os.remove(new_file_path)
+
+            os.rename(old_file_path, new_file_path)
+    print(Fore.GREEN + "Файлы успешно заменены!" + Style.RESET_ALL)
 
 def print_banner():
-    ascii_banner = pyfiglet.figlet_format("Update\nChecker")
-    print(Fore.CYAN + ascii_banner + "\nby @emptyenemy\n" + Style.RESET_ALL)
+    ascii_banner = pyfiglet.figlet_format("Update Checker")
+    print(Fore.CYAN + ascii_banner + "by @emptyenemy\n" + Style.RESET_ALL)
 
 def main():
     init(autoreset=True)
@@ -52,14 +72,18 @@ def main():
     remote = get_remote_version()
     print(Fore.YELLOW + f"Локальная версия: {local}" + Style.RESET_ALL)
     print(Fore.YELLOW + f"Последняя версия: {remote}" + Style.RESET_ALL)
+
     if is_update_available(local, remote):
-        choice = input(Fore.YELLOW + "\nДоступна новая версия. Обновить? (Y/N): " + Style.RESET_ALL).strip().lower()
+        choice = input(Fore.YELLOW + "Доступна новая версия. Обновить? (Y/N): " + Style.RESET_ALL).strip().lower()
         if choice == 'y':
-            update_repo()
+            download_latest_release()
+            extract_zip()
+            replace_old_files()
+            print(Fore.GREEN + "Обновление завершено!" + Style.RESET_ALL)
         else:
-            print(Fore.RED + "\nОбновление отменено пользователем." + Style.RESET_ALL)
+            print(Fore.RED + "Обновление отменено пользователем." + Style.RESET_ALL)
     else:
-        print(Fore.GREEN + "\nУ вас установлена последняя версия.\n" + Style.RESET_ALL)
+        print(Fore.GREEN + "У вас установлена последняя версия." + Style.RESET_ALL)
 
 if __name__ == '__main__':
     main()
