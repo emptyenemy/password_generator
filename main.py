@@ -1,6 +1,7 @@
 import string
 import random
 import pyfiglet
+from version import __version__
 from colorama import init, Fore, Style
 
 def generate_password(length, groups, charset):
@@ -11,7 +12,7 @@ def generate_password(length, groups, charset):
 
 def print_banner():
     ascii_banner = pyfiglet.figlet_format("Password Generator")
-    print(Fore.CYAN + ascii_banner + "v1.02 by @emptyenemy\n" + Style.RESET_ALL)
+    print(Fore.CYAN + ascii_banner + f"v{__version__} by @emptyenemy\n" + Style.RESET_ALL)
 
 def main():
     init(autoreset=True)
