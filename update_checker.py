@@ -36,22 +36,32 @@ def is_update_available(local, remote):
         sys.exit(1)
 
 def download_latest_release():
-    url = "https://github.com/emptyenemy/password_generator/archive/refs/tags/v1.0.6.zip"  # Поменяйте на актуальный URL для последнего релиза
+    url = "https://github.com/emptyenemy/password_generator/archive/refs/tags/v1.1.2.zip"  # Поменяйте на актуальный URL для последнего релиза
     print(Fore.YELLOW + "Скачиваем последнюю версию проекта..." + Style.RESET_ALL)
     response = requests.get(url)
-    with open('password_generator_latest.zip', 'wb') as f:
-        f.write(response.content)
-    print(Fore.GREEN + "Загрузка завершена!" + Style.RESET_ALL)
+    if response.status_code == 200:
+        with open('password_generator_latest.zip', 'wb') as f:
+            f.write(response.content)
+        print(Fore.GREEN + "Загрузка завершена!" + Style.RESET_ALL)
+    else:
+        print(Fore.RED + "Ошибка при скачивании файла!" + Style.RESET_ALL)
+        sys.exit(1)
 
 def extract_zip():
     print(Fore.YELLOW + "Распаковываем архив..." + Style.RESET_ALL)
-    with zipfile.ZipFile('password_generator_latest.zip', 'r') as zip_ref:
-        zip_ref.extractall('password_generator_latest')
-    print(Fore.GREEN + "Распаковка завершена!" + Style.RESET_ALL)
+    try:
+        with zipfile.ZipFile('password_generator_latest.zip', 'r') as zip_ref:
+            zip_ref.testzip()  # Проверяем целостность архива
+            zip_ref.extractall('password_generator_latest')
+        print(Fore.GREEN + "Распаковка завершена!" + Style.RESET_ALL)
+    except zipfile.BadZipFile:
+        print(Fore.RED + "Ошибка: файл не является корректным zip-архивом!" + Style.RESET_ALL)
+        sys.exit(1)
 
 def replace_old_files():
     print(Fore.YELLOW + "Заменяем старые файлы новыми..." + Style.RESET_ALL)
-    for root, dirs, files in os.walk('password_generator_latest/password_generator-1.0.6'):  # Замените на актуальный путь после распаковки
+    source_dir = 'password_generator_latest/password_generator-1.1.2'  # Обновите на актуальный путь
+    for root, dirs, files in os.walk(source_dir):
         for file in files:
             old_file_path = os.path.join(root, file)
             new_file_path = os.path.join(os.getcwd(), file)
