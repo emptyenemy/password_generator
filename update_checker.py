@@ -3,6 +3,7 @@ import subprocess
 import sys
 import os
 import zipfile
+import pyfiglet
 from colorama import init, Fore, Style
 
 def get_local_version():
