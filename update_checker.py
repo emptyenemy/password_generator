@@ -53,13 +53,13 @@ def main():
     print(Fore.YELLOW + f"Локальная версия: {local}" + Style.RESET_ALL)
     print(Fore.YELLOW + f"Последняя версия: {remote}" + Style.RESET_ALL)
     if is_update_available(local, remote):
-        choice = input(Fore.YELLOW + "Доступна новая версия. Обновить? (Y/N): " + Style.RESET_ALL).strip().lower()
+        choice = input(Fore.YELLOW + "\nДоступна новая версия. Обновить? (Y/N): " + Style.RESET_ALL).strip().lower()
         if choice == 'y':
             update_repo()
         else:
             print(Fore.RED + "\nОбновление отменено пользователем." + Style.RESET_ALL)
     else:
-        print(Fore.GREEN + "\nУ вас установлена последняя версия." + Style.RESET_ALL)
+        print(Fore.GREEN + "\nУ вас установлена последняя версия.\n" + Style.RESET_ALL)
 
 if __name__ == '__main__':
     main()
